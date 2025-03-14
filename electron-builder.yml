@@ -1,0 +1,46 @@
+appId: com.linfp.atranslate
+productName: ATranslate
+directories:
+  buildResources: build
+files:
+  - '!**/.vscode/*'
+  - '!src/*'
+  - '!aur/*'
+  - '!images/*'
+  - '!scripts/*'
+  - '!extra/*'
+  - '!tailwind.config.js'
+  - '!postcss.config.js'
+  - '!electron.vite.config.{js,ts,mjs,cjs}'
+  - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
+  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+extraResources:
+  - from: './extra/'
+    to: ''
+protocols:
+  name: 'ATranslate'
+  schemes:
+    - 'clash'
+    - 'atranslate'
+win:
+  target:
+    - nsis
+    - zip
+  artifactName: ${name}-windows-${version}-${arch}-portable.${ext}
+nsis:
+  artifactName: ${name}-windows-${version}-${arch}-setup.${ext}
+  uninstallDisplayName: ${productName}
+  allowToChangeInstallationDirectory: true
+  oneClick: false
+  perMachine: true
+  createDesktopShortcut: always
+mac:
+  target:
+    - pkg
+    - zip
+  entitlementsInherit: build/entitlements.mac.plist
+  notarize: true
+  artifactName: ${name}-macos-${version}-${arch}.${ext}
+npmRebuild: true
+publish: []

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self';style-src 'self' 'unsafe-inline';"/>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self';style-src 'self' 'unsafe-inline';">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ATranslate</title>
+    <link rel="stylesheet" href="./bulma.min.css">
+</head>
+<body>
+<div class="card">
+    <div class="card-header">
+        <p class="card-header-title">ATranslate</p>
+        <button class="button is-ghost" id="openSettingsBtn">
+            设置
+        </button>
+    </div>
+    <div class="card-content">
+        <div class="control" id="srcTextContainer">
+            <textarea id="srcText" class="textarea is-link" placeholder="Enter 翻译
+Shift+Enter 换行" rows="6"></textarea>
+        </div>
+    </div>
+
+    <div class="card-content">
+        <div class="is-flex is-justify-content-center is-align-items-center">
+            <div class="select is-rounded is-link">
+                <select id="dstLangSelect">
+                    <option value="Auto" selected>自动选择</option>
+                    <option value="Chinese">中文</option>
+                    <option value="English">英文</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-content">
+        <div class="control" id="dstTextContainer">
+            <p id="dstText"></p>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="settingsModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">设置</p>
+            <button class="delete" aria-label="close" id="settingsCloseBtn"></button>
+        </header>
+        <div class="modal-card-body">
+            <div class="tabs">
+                <ul>
+                    <li class="is-active" id="modelListTab"><a>Model列表</a></li>
+                    <li id="addModelApiTab"><a>添加Model</a></li>
+                </ul>
+            </div>
+            <div class="content" id="modelListContent">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th><abbr title="名称">名称</abbr></th>
+                        <th><abbr title="Model">Model</abbr></th>
+                        <th><abbr title="Model">默认</abbr></th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="apiModelTableBody">
+                    </tbody>
+                </table>
+            </div>
+            <div class="content is-hidden" id="addModelApiContent">
+                <div class="field">
+                    <label class="label">名称</label>
+                    <div class="control">
+                        <input id="addApiNameInput" class="input" type="text" placeholder="例如: 我叫ChatGPT-4">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">URL</label>
+                    <div class="control">
+                        <input id="addApiUrlInput" class="input" type="text" placeholder="输入兼容OpenAI的url, 例如: http://localhost:1234/v1">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">API密钥</label>
+                    <div class="control">
+                        <input id="addApiKeyInput" class="input" type="text">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Model</label>
+                    <div class="control">
+                        <input id="addApiModelInput" class="input" type="text">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button id="addApiModelSubmitBtn" class="button is-link">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="./renderer.js"></script>
+</html>

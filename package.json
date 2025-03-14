@@ -1,0 +1,18 @@
+{
+  "name": "ATranslate",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --publish never --win --x64",
+    "build:mac": "electron-builder --publish never --mac"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@electron/fuses": "^1.8.0",
+    "electron": "^35.0.1",
+    "electron-builder": "^25.1.8"
+  }
+}
