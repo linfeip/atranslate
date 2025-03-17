@@ -1,4 +1,4 @@
-const {app, BrowserWindow, net, ipcMain, globalShortcut, Tray, Menu} = require('electron/main')
+const {app, BrowserWindow, net, ipcMain, globalShortcut, Tray, Menu, MenuItem} = require('electron/main')
 const {clipboard} = require('electron')
 const path = require('node:path')
 
@@ -6,20 +6,17 @@ let mainWindow = null
 let tray = null
 // const isDev = process.env.NODE_ENV !== 'production'
 const isDev = true
+let isQuitting = false
 
 const createMainWindow = async () => {
-    if (mainWindow) {
-        mainWindow.show()
-        return
-    }
-
     mainWindow = new BrowserWindow({
         width: 800,
         height: 550,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             devTools: isDev,
-        }
+        },
+        frame: false,
     })
     return new Promise((resolve) => {
         mainWindow.loadFile('index.html')
@@ -29,10 +26,23 @@ const createMainWindow = async () => {
         })
         mainWindow.on('closed', () => {
             mainWindow = null
+            tray = null
         })
         mainWindow.on('close', (event) => {
+            if (!isQuitting) {
+                event.preventDefault()
+                mainWindow.hide()
+            }
         })
     })
+}
+
+const triggerMainWindow = () => {
+    if (mainWindow.isVisible()) {
+        mainWindow.hide()
+    } else {
+        mainWindow.show()
+    }
 }
 
 app.whenReady().then(async () => {
@@ -58,23 +68,18 @@ function createTray() {
     tray = new Tray(path.join(__dirname, 'icon.png')); // 指定托盘图标路径
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: '显示窗口',
-            click: async () => {
-                await activate()
+            label: '打开', click: () => {
+                console.log('打开窗口');
             }
         },
         {
-            label: '退出',
-            click: () => {
+            label: '退出', click: () => {
                 app.quit();
             }
         }
     ]);
-
-    tray.setToolTip('ATranslate'); // 设置鼠标悬停时的提示
-    tray.setContextMenu(contextMenu);       // 设置右键菜单
-
-    // 点击托盘图标时显示窗口
+    tray.setContextMenu(contextMenu);
+    tray.setToolTip('ATranslate');
     tray.on('click', async () => {
         await activate()
     });
@@ -84,10 +89,14 @@ app.on('will-quit', () => {
     globalShortcut.unregisterAll()
 })
 
+app.on('before-quit', () => {
+    isQuitting = true
+})
+
 app.on('window-all-closed', () => {
-    /* if (process.platform !== 'darwin') {
-         app.quit()
-     }*/
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
 })
 
 // 监听渲染界面的net http 请求
@@ -127,8 +136,12 @@ ipcMain.handle('clipboard:readText', () => {
 function registerShortcut() {
     // 全局快捷键监听
     globalShortcut.register('Alt+E', async () => {
-        await createMainWindow()
+        mainWindow?.show()
         // 给渲染页面发送, 读取粘贴板数据进行翻译事件
         mainWindow.webContents.send('globalShortcut:Alt+E')
     })
+    globalShortcut.register('Alt+G', async () => {
+        triggerMainWindow()
+    })
 }
+
