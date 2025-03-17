@@ -1,4 +1,4 @@
-const {app, BrowserWindow, net, ipcMain, globalShortcut, Tray, Menu, MenuItem} = require('electron/main')
+const {app, BrowserWindow, net, ipcMain, globalShortcut, Tray, Menu, nativeImage} = require('electron')
 const {clipboard} = require('electron')
 const path = require('node:path')
 
@@ -65,11 +65,11 @@ async function activate() {
 }
 
 function createTray() {
-    tray = new Tray(path.join(__dirname, 'icon.png')); // 指定托盘图标路径
+    tray = new Tray(path.join(__dirname, 'tray_icon.png')); // 指定托盘图标路径
     const contextMenu = Menu.buildFromTemplate([
         {
             label: '打开', click: () => {
-                console.log('打开窗口');
+                mainWindow?.show()
             }
         },
         {
