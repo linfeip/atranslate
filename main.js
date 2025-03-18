@@ -65,7 +65,10 @@ async function activate() {
 }
 
 function createTray() {
-    tray = new Tray(path.join(__dirname, 'tray_icon.png')); // 指定托盘图标路径
+    const image = nativeImage.createFromPath(path.join(__dirname, 'tray_icon.png')).resize({height: 16})
+    image.setTemplateImage(true)
+    // tray = new Tray(path.join(__dirname, 'tray_icon.png')) // 指定托盘图标路径
+    tray = new Tray(image) // 指定托盘图标路径
     const contextMenu = Menu.buildFromTemplate([
         {
             label: '打开', click: () => {
